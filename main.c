@@ -9,11 +9,18 @@ int creer_tableau() {
     for(int i=0; i<50; i++) {
         grille[i] = (int*)malloc(sizeof(int)*30);
     }
-    return grille[0][0] ;
+    int m,n;
+    for(m = 0; m < 50; m++) {
+        for(n = 0; n <30; n++) {
+            printf("%d",0);
+        }
+        printf("\n");
+}
+
 }
 
 int main(int argc, char **argv){
-    printf("hello");
+    printf("%d",creer_tableau()); 
     return 0 ;
 }
 

@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #define H 30
 
-int creer_tableau() {
+int** creer_tableau() {
         int** grille = (int**)malloc(sizeof(int*)*30);
     if (grille == NULL) {
         exit(EXIT_FAILURE);
@@ -38,7 +38,7 @@ int creer_tableau() {
             printf("%c", grille[m][n]);
         }
         printf("\n");
-    return 0 ;
+    return grille ;
 }
 
 }

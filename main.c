@@ -22,7 +22,8 @@ int creer_tableau() {
     for (int i=0; i<nb_cellules;i++) {
         int x,y;
         printf("Coordonnées de la cellule à modifier");
-        scanf("%d","%d",&x,&y);
+        scanf(" x : %d ",&x);
+        scanf(" y : %d ",&y); 
     int m,n;
     for(m = 0; m < 30; m++) {
         for(n = 0; n <50; n++) {
@@ -35,6 +36,7 @@ int creer_tableau() {
             printf("%c", grille[m][n]);
         }
         printf("\n");
+    return 0 ;
 }
 
 }

@@ -27,13 +27,8 @@ int** creer_tableau() {
     int m,n;
     for(m = 0; m < 30; m++) {
         for(n = 0; n <50; n++) {
-            if ( m!=x | n!=y){
-                if (grille[m][n]){
-                    grille[m][n]=0;
-                }
-                else {
-                    grille[m][n]=1;
-                }
+            if ( (m == x) | (n == y)){
+                    grille[m][n] = 1;
             }
             printf("%c", grille[m][n]);
         }
@@ -94,7 +89,7 @@ int nb_voisins(int** matrice, int m, int n, int i, int j) {
 
     return acc;
 }
-/*
+
 int generation_k(int** matrice, int m, int n, int k) {
     for (int a = 0; a < k; a++) {
         for (int b = 0; b<m; b++){
@@ -117,7 +112,7 @@ int generation_k(int** matrice, int m, int n, int k) {
     }
 
 }
-*/
+
 int main(int argc, char **argv){
     creer_tableau();
     return 0 ;

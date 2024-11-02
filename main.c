@@ -27,11 +27,13 @@ int creer_tableau() {
     int m,n;
     for(m = 0; m < 30; m++) {
         for(n = 0; n <50; n++) {
-            if (m!=x || n!=x) {
-            grille[m][n] = 'O';
-            }
-            else {
-                grille[m][n] = 'V';
+            if ( m!=x | n!=y){
+                if (grille[m][n]){
+                    grille[m][n]=0;
+                }
+                else {
+                    grille[m][n]=1;
+                }
             }
             printf("%c", grille[m][n]);
         }
@@ -121,3 +123,4 @@ int main(int argc, char **argv){
     return 0 ;
 }
 
+//gcc -o main -std=c99 -Wall -Wextra -Wvla -fsanitize=address,undefined -O0 -g main.c 

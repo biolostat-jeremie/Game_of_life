@@ -90,7 +90,7 @@ int nb_voisins(int** matrice, int m, int n, int i, int j) {
     return acc;
 }
 
-int generation_k(int** matrice, int m, int n, int k) {
+/*int generation_k(int** matrice, int m, int n, int k) {
     for (int a = 0; a < k; a++) {
         for (int b = 0; b<m; b++){
             for (int c = 0; c<n; b++){
@@ -111,7 +111,7 @@ int generation_k(int** matrice, int m, int n, int k) {
 
     }
 
-}
+}*/
 
 int main(int argc, char **argv){
     creer_tableau();

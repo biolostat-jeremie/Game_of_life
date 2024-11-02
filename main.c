@@ -93,8 +93,3 @@ int generation_k(int** matrice, int m, int n, int k) {
 
 }
 
-int main(int argc, char **argv){
-    printf("%d",creer_tableau());
-    return 0 ;
-}
-

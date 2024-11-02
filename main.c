@@ -44,6 +44,7 @@ int grilleij(int (*grille)[H], int i , int j) {
     return ligne [j];
 }
 
+/*
 int nb_voisin(int (*grille)[H] , int  m , int n ,int i ,int j){
     if (i != 0 && i != n && j != 0 && j!=m){
         return grilleij(grille, i-1 , j-1 ) + grilleij(grille, i-1 , j ) + grilleij(grille, i-1 , j+1 )+ 
@@ -72,6 +73,8 @@ int nb_voisin(int (*grille)[H] , int  m , int n ,int i ,int j){
         return 0;
     }
 }
+*/
+
 
 int nb_voisins(int** matrice, int m, int n, int i, int j) {
     int acc = 0;

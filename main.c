@@ -13,7 +13,7 @@ int** creer_tableau() {
         grille[i] = (int*)malloc(sizeof(int)*50);
         if (grille[i] == NULL){
         exit(EXIT_FAILURE);
-        //free (grille[i]);
+        free (grille[i]);
         }
     }
     int nb_cellules;

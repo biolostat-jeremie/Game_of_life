@@ -1,12 +1,4 @@
-#include <termios.h>
-#include <stdio.h>
-#include <sys/ioctl.h>
-#include <locale.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <stddef.h>
-#include <unistd.h>
+#include "main.h"
 
 int** creer_tableau(int H , int L) {
         int** grille = (int**)malloc(sizeof(int*)*H);
@@ -110,76 +102,30 @@ void generation_suivante (int** matrice_in,int** matrice_out, int H, int L){
 
 
 
-
-struct termios orig_term_settings;
-int termsize_col,termsize_row;
-
-#define OUT_BUF_SIZE 100
-char stdout_buffer[OUT_BUF_SIZE];
-
-void    graphical_cleanup(void)
+//attend ms milliseconde
+int        td_wait(long    ms)
 {
-    //appellé a la sortie, responsable de clean les graphisme et de restaurer le terminal
 
-    //restore les attributs du terminal
-    tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_term_settings);
-    //réaffiche le curseur, et reset la couleur d'affichage au valeur par défault
-    printf("%s", "\33[H \33[?25h \33[0m \33[2J \e[?1003l");
+    //nanosleep accept un struct en seconds et nanosecondes
+    //on convertit donc l'entrée
+    struct timespec ts;
+    ts.tv_sec  = ms / 1000;
+    ts.tv_nsec = (ms % 1000) * 1000000;
+    return nanosleep(&ts, &ts);
+
 }
-
-void    init_graphical(void)
-{
-    //mets en place les graphismes
-	
-    //mets en place le buffering
-    setvbuf(stdout, stdout_buffer, _IOFBF, OUT_BUF_SIZE);
-    //cache le curseur
-    printf("%s", "\33[?25l");
-    //obtention de la taille de l'écran
-    struct winsize raw_termsize;
-    ioctl(0, TIOCGWINSZ, &raw_termsize);
-    termsize_col    = raw_termsize.ws_col;
-    termsize_row    = raw_termsize.ws_row;
-
-    //setup du terminal sur linux
-    #if __unix__
-    //sauvegarde les attributs terminal (pour restauration future) et mets le term en raw mode
-    //Voir http://manpagesfr.free.fr/man/man3/termios.3.html pour plus de détails
-    tcgetattr(STDIN_FILENO, &orig_term_settings);
-    struct termios raw = orig_term_settings;
-    raw.c_lflag   &= ~(ECHO | ECHONL | ICANON | IEXTEN | ISIG);
-    raw.c_iflag   &= ~( IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
-    raw.c_oflag   &= ~(OPOST);
-    raw.c_cflag   &= ~(CSIZE | PARENB);
-    raw.c_cflag   |= CS8;
-
-	//VTIME et VMIN permettent a scanf (read) de retourner instantanément 0 si l'utilisateur n'a rien rentré
-	//et de fonctionner normalement sinon
-    raw.c_cc[VMIN] = 1; raw.c_cc[VTIME] = 1;
-    //applique tout les changements
-    tcsetattr(STDIN_FILENO, TCSANOW, &raw);
-    #else
-        #error  "non POSIX system unsupported"
-    #endif //SYSTEM_POSIX
-
-    //set la langue a rien, pour que certaint settings de langue bizarre
-	//(ex langue de droite a gauche) n'influent pas sur le programme
-    setlocale(LC_ALL, "");
-    printf("\e[?1003h\e[?1015h\e[?1006h");
-    fflush(stdout);
-}
-
-void clear_input(){
-    scanf("%*[^\e]");
-}
-
-
-
 
 
 int main(){
     
-    printf("Indiquer la taille du tableau au format Longeur,Largeur : \n");
+    //Detecte la taille du terminal 
+    struct winsize raw_termsize;
+    ioctl(0, TIOCGWINSZ, &raw_termsize);
+    int termsize_col    = raw_termsize.ws_col;
+    int termsize_row    = raw_termsize.ws_row;
+
+    printf("Indiquer la taille du tableau au format Longeur,Largeur : \n"
+    "(Taille maximale conseillée : %d,%d)", termsize_row-1 , termsize_col);
     int H , L;
     scanf("%d,%d" , &H ,&L);
     int **grille1 = creer_tableau(H ,L );
@@ -188,44 +134,23 @@ int main(){
     int k ;
     printf ("Combien de générations ?\n");
     scanf ("%d",&k);
+    printf ("Nombre de miliseconde entre chaque génération ?");
+    int delay;
+    scanf("%d", &delay); 
 
     for (int i = 0 ; i<k ; i++ ){
         generation_suivante(grille1 , grille2 , H , L);
         int **temp = grille1;
         grille1 = grille2;
         grille2 = temp;
-        sleep(1);
+        td_wait(delay);
         afficher_tableau(grille1,H,L);
     }
 
     free_tableau(grille1 ,H);
     free_tableau(grille2 ,H);
     
-   
-    int x,y,btn;
-    bool up;
-    init_graphical();
-    
-    char c=0;
-    while(c!='m'){
-        x=0;
-        y=0;
-        btn=0;
-        int num_read=0;
-        num_read = scanf("\e[<%i;%i;%i%c",&btn,&x,&y,&c);
-        if (num_read!=4){
-            fflush(stdout);
-            clear_input();
-            continue;
-        }
-        up=(c=='m');
-        printf("\n\rbtn:%i x:%i y:%i up:%i",btn,x,y,up);
-        fflush(stdout);
-        c=0;
-    }
-    
-    graphical_cleanup();
     return 0 ;
 }
 
-//gcc -o main -std=c99 -Wall -Wextra -Wvla -fsanitize=address,undefined -O0 -g main.c 
+

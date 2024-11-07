@@ -8,7 +8,7 @@ int** creer_tableau(int H , int L) {
     for(int i=0; i<H; i++) {
         grille[i] = (int*)malloc(sizeof(int)*L);
         if (grille[i] == NULL){
-        for(int j ; j < i ; j++){
+        for(int j=0 ; j < i ; j++){
             free (grille[j]);
         }
         exit(EXIT_FAILURE);
@@ -30,10 +30,10 @@ void afficher_tableau (int **grille , int H , int L){
     for(m = 0; m < H; m++) {
             for(n = 0; n <L; n++) {
                 if (grille[m][n]==1){
-                    printf("█");
+                    printf("██");
                 }
                 else{
-                    printf("▒");
+                    printf("▒▒");
                 }    
 
             }
@@ -42,9 +42,8 @@ void afficher_tableau (int **grille , int H , int L){
 }
 
 int** init_grille(int** grille , int H , int L){     
-    int i,j;
-    for (i=0 ; i<H ; i++){
-        for(j=0 ; j<L ; j++){
+    for (int i=0 ; i<H ; i++){
+        for(int j=0 ; j<L ; j++){
             grille[i][j]=0;
         }
     }
@@ -68,7 +67,9 @@ int nb_voisins(int** matrice, int H, int L, int i, int j) {
         for (int b = -1; b <= 1; b++) {
             int ligne = i + a;
             int col = j + b;
-            if (!(a == 0 && b == 0) && ligne >= 0 && ligne < H && col >= 0 && col < L) {
+            if (!(a == 0 && b == 0) && ligne >= 0 && ligne < H && col >= 0 && col < L) 
+            //On vérifie qu’on ne sorte pas de la grille
+            {
                 if (matrice[ligne][col] ==1){ 
                     acc++;
                 }
@@ -101,7 +102,7 @@ void generation_suivante (int** matrice_in,int** matrice_out, int H, int L){
 }
 
 
-
+// Fonction a comenter si vous voulez compiler sur Windows
 //attend ms milliseconde
 int        td_wait(long    ms)
 {
@@ -116,7 +117,7 @@ int        td_wait(long    ms)
 }
 
 
-int main(){
+int  main(void){
     
     //Detecte la taille du terminal 
     struct winsize raw_termsize;
@@ -125,7 +126,7 @@ int main(){
     int termsize_row    = raw_termsize.ws_row;
 
     printf("Indiquer la taille du tableau au format Longeur,Largeur : \n"
-    "(Taille maximale conseillée : %d,%d)", termsize_row-1 , termsize_col);
+    "(Taille maximale conseillée : %d,%d)", (termsize_row-1)/2 , termsize_col/2);
     int H , L;
     scanf("%d,%d" , &H ,&L);
     int **grille1 = creer_tableau(H ,L );
@@ -143,6 +144,7 @@ int main(){
         int **temp = grille1;
         grille1 = grille2;
         grille2 = temp;
+        // replacer td_wait(delay) par sleep(1) pour compiler sur windows 
         td_wait(delay);
         afficher_tableau(grille1,H,L);
     }
